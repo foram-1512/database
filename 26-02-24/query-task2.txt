@@ -1,0 +1,205 @@
+1
+create table tbl_school(
+id bigint(20) primary key auto_increment,
+address bigint(20) ,
+school_name varchar(16),
+school_principal varchar(16),
+other_school_detail text,
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key (address) references tbl_address(id)
+);
+
+2
+create table tbl_address(
+id bigint(20) primary key auto_increment,
+address text ,
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp
+);
+
+3........
+create table tbl_perent(
+id bigint(20) primary key auto_increment,
+gender enum('male','female'),
+first_name varchar(16),
+middle_name varchar(16),
+last_name varchar(16),
+other_perent_details varchar(128),
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp
+);
+
+4......
+create table tbl_perentaddress(
+id bigint(20) primary key auto_increment,
+perent_id bigint(20) ,
+date_address_from date,
+date_address_to date,
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key (perent_id) references tbl_perent(id)
+);
+
+5.......
+create table tbl_studentaddress(
+id bigint(20) primary key auto_increment,
+address_id bigint(20) ,
+date_address_from date,
+date_address_to date,
+address text,
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key (address_id) references tbl_address(id)
+);
+
+6......
+create table tbl_student(
+id bigint(20) primary key auto_increment,
+gender enum('male','female'),
+first_name varchar(16),
+middle_name varchar(16),
+last_name varchar(16),
+dateOfBirth date,
+other_student_details varchar(128),
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp
+);
+
+7......
+create table tbl_student_perents(
+id bigint(20) primary key auto_increment,
+student_id bigint(20) ,
+perent_id bigint(20),
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key (student_id) references tbl_student(id),
+foreign key (perent_id) references tbl_perent(id)
+);
+
+8.....
+create table tbl_families(
+id bigint(20) primary key auto_increment,
+head_of_family_perent_id bigint(20),
+family_name varchar(16),
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp
+);
+
+9.....
+create table tbl_family_members(
+id bigint(20) primary key auto_increment,
+family_id bigint(20) ,
+perent_or_student_member varchar(128),
+perent_id bigint(20),
+student_id bigint(20),
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key (student_id) references tbl_student(id),
+foreign key (perent_id) references tbl_perent(id),
+foreign key (family_id) references tbl_families(id)
+);
+
+10.......
+create table tbl_teacher(
+id bigint(20) primary key auto_increment,
+school_id bigint(20),
+gender enum('male','female'),
+first_name varchar(16),
+middle_name varchar(16),
+last_name varchar(16),
+other_teacher_details varchar(128),
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key (school_id) references tbl_school(id)
+);
+
+11.......
+create table tbl_subject(
+id bigint(20) primary key auto_increment,
+subject_name varchar(16),
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp
+);
+
+12......
+create table tbl_classes(
+id bigint(20) primary key auto_increment,
+subject_id bigint(20),
+teacher_id bigint(20),
+class_code varchar(16),
+class_name varchar(16),
+date_from date,
+date_to date,
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key (subject_id) references tbl_subject(id),
+foreign key (teacher_id) references tbl_teacher(id)
+);
+
+13........
+create table tbl_student_classes(
+id bigint(20) primary key auto_increment,
+class_id bigint(20),
+date_from date,
+date_to date,
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key (class_id) references tbl_classes(id)
+);
+
+14.........
+create table tbl_homework(
+id bigint(20) primary key auto_increment,
+student_id bigint(20),
+date_created date,
+homework_content text,
+grade varchar(8),
+other_homework_details varchar(128),
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key (student_id) references tbl_student(id)
+);
+
+15........
+create table tbl_reports(
+id bigint(20) primary key auto_increment,
+student_id bigint(20),
+date_created date,
+report_content text,
+teacher_comments text,
+other_report_details varchar(128),
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key (student_id) references tbl_student(id)
+);

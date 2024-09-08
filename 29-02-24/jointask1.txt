@@ -1,0 +1,89 @@
+create database foram29;
+use foram29;
+
+create table tbl_User (
+id bigint(20) primary key auto_increment,
+name varchar(24),
+mobile_number varchar(16),
+role enum('customer','supplier'),
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp
+);
+
+-- INSERT INTO `worker2` (`id`, `first_name`, `last_name`, `salary`, `joining_date`, `department_id`, `created_at`, `updated_at`, `is_active`);
+
+create table tbl_product(
+id bigint(20) primary key auto_increment,
+product_name varchar(34),
+quantity int,
+price float,
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp
+);
+
+create table tbl_order(
+id bigint(20) primary key auto_increment,
+order_id bigint(20),
+customer_id bigint,
+product_id bigint,
+shipper_id bigint,
+order_date date,
+status enum('pending','delivered','cancelled'),
+is_active boolean default '1' COMMENT '1=active, 0=inactive',
+is_delete boolean default '0' Comment '1=deleted, 0=non-deleted',
+created_at  timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key(product_id) references tbl_product(id)
+);
+
+insert into tbl_User(name,mobile_number,role) values ('Foram',9106603730,'customer'),
+('Vrusha',9467352672,'supplier'),
+('Dhruv',8866119898,'customer'),
+('Divyank',9988534486,'customer'),
+('Nidhi',9857938478,'supplier'),
+('Vivek',7657820182,'supplier'),
+('Chandni',7653280743,'customer'),
+('Dipanshu',6708970900,'supplier'),
+('Dhrasti',9923468173,'customer'),
+('Priya',8878737565,'customer'); 
+
+insert into tbl_product (product_name,quantity,price) values ('Samsung',1,20000),
+('Xiomi',1,50000),
+('OnePlus',1,25000),
+('Oppo',1,15000),
+('Vivo',1,6000),
+('Samsung',1,80000),
+('IPhone',1,100000);
+
+insert into tbl_order(order_id,customer_id,product_id,shipper_id,order_date,status) values (2,301,1,21,'2023-02-20','delivered'),
+(10,333,2,21,'2023-01-10','pending'),
+(22,307,3,25,'2023-02-20','cancelled'),
+(12,309,4,24,'2023-02-20','pending'),
+(27,315,5,26,'2023-02-20','pending'),
+(30,325,6,28,'2023-02-20','delivered');
+
+-- Query
+-- 1. 2nd highest price product with subquery
+select * from tbl_product order by price desc limit 1,1; -- start index from 0
+-- 2. Product details with supplier detsils
+select p.*,u.* from tbl_product p join tbl_User u on p.id = u.id where u.role='supplier';
+-- 3. Order details with customer name and shipper name
+select o.*,u.* from tbl_order o join tbl_User u on o.id = u.id where u.role='supplier';
+-- 4. Product wise order count query
+SELECT p.product_name, COUNT(o.order_id) AS order_count FROM tbl_product p JOIN tbl_order o ON p.id = o.product_id GROUP BY p.product_name;
+-- 5. Get list of order whose status not in Cancelled
+select * from tbl_order Where status not in('cancelled');
+-- 6. Get list of customer with total number of order
+
+SELECT customer_id, Count(o.order_date) AS TotalOrders
+FROM tbl_order o
+Where customer_id =customer_id
+GROUP BY customer_id
+Order BY Count(order_id) DESC;
+
+-- 7. Get list of customer with total number of order and count greater then 5
+SELECT p.product_name, COUNT(o.order_id)>1 AS order_count FROM tbl_product p JOIN tbl_order o ON p.id = o.product_id  GROUP BY p.product_name;

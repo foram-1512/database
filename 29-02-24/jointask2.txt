@@ -1,0 +1,182 @@
+create database 29task2;
+
+use 29task2;
+
+
+create table tbl_department (
+name varchar(61),
+d_no bigint(20) primary key ,
+is_active boolean default '1' comment '1:-active & 0:-inactive',
+created_at timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp
+);
+
+insert into  tbl_department(name ,d_no) values
+( 'Foram','10'),
+('Div','20'),
+( 'Vrusha','30'),
+('Vivek','40'),
+('Nidhi','50'),
+('Priya','60'),
+('Deep','70');
+
+create table tbl_Employee (
+id bigint(20) primary key auto_increment,
+d_no bigint(20),
+name varchar(61),
+bank_name varchar(34),
+street_address text,
+city varchar(34),
+salary float,
+commission float,
+mobile_number varchar(16),
+jobs enum('salesmen','manager','clerk','president'),
+hired_date date,
+role enum('customer','supplier'),
+is_active boolean default '1' comment '1:-active & 0:-inactive',
+created_at timestamp default current_timestamp,
+updated_at timestamp default current_timestamp on update current_timestamp,
+foreign key(d_no) references  tbl_department(d_no)
+);
+
+
+
+INSERT INTO tbl_Employee (d_no, name, bank_name, street_address, city, salary, commission, mobile_number, jobs, hired_date) VALUES
+('10', 'Foram', 'BOI', 'text address', 'Nadiad', 120000, 1200, '1234567899', 'president', '2015-04-17'),
+('20', 'Div', 'HDFC', 'texts', 'Kapadvanj', 150000, 100, '91234567899', 'clerk', '2016-03-14'),
+('30', 'Vrusha', 'SBI', 'text in', 'Ahmedabad', 170000, 100, '6634567899', 'manager', '2014-03-21'),
+('40', 'Vivek', 'BOI', 'text address', 'Nadiad', 190000, 5000, '9634567899', 'salesmen', '2015-07-10'),
+('50', 'Nidhi', 'KOTAK', 'text', 'Nadiad', 190000, 1000, '8934567899', 'clerk', '2017-09-10'),
+('60', 'Priya', 'SBI', 'text', 'Anand', 1000000, 10000, '5534567899', 'clerk', '2017-09-10'),
+('70', 'deep', 'AXIS', 'text address', 'Khambhat', 220000, 500, '1234567888', 'manager', '2014-11-15'),
+('10', 'mauni', 'BOI', 'text address', 'Nadiad', 120000, 1200, '1234567899', 'president', '2015-04-17'),
+('30', 'divya', 'HDFC', 'texts', 'Kapadvanj', 150000, 100, '91234567899', 'clerk', '2016-03-14'),
+('30', 'dixa', 'SBI', 'text in', 'Ahmedabad', 170000, 100, '6634567899', 'manager', '2014-03-21');
+
+INSERT INTO tbl_Employee (d_no, name, bank_name, street_address, city, salary, commission, mobile_number, jobs, hired_date) VALUES
+('50', 'riya', 'BOI', 'text address', 'Nadiad', 10000,0, '1234567899', 'clerk', '2015-12-31');
+
+-- 1. Find the names, street address, and cities of residence for all employees who work for'First Bank Corporation' and earn more than $10,000.
+select name , street_address, city from tbl_employee where bank_name='BOI' and salary > 10000;
+
+-- 2. Select the employees in department 30.
+select * from tbl_employee where d_no=30;
+
+-- 3. List the names, numbers and departments of all clerks.
+select e.name,e.d_no,d.name as dept_name from tbl_employee e join tbl_department d on e.d_no= d.d_no where e.jobs='clerk';
+
+-- 4. Find the department numbers and names of employees of all departments with deptno greater than 20.
+select d.d_no,e.name,e.jobs from tbl_department d join tbl_employee e  on e.d_no=d.d_no where d.d_no >20;
+
+-- 5. Find employees whose commission is greater than their salaries.
+select * from tbl_employee  where commission > salary;
+
+-- 6. Find employees whose commission is greater than 60 % of their salaries.
+select * from tbl_employee where commission < 0.6*salary;
+
+-- 7. List name, job and salary of all employees in department 20 who earn more than 2000/-.
+select name,jobs,salary from tbl_employee where d_no=20 and salary>2000;
+
+-- 8. Find all salesmen in department 30 whose salary is greater than 1500/-.
+select name from tbl_employee where d_no=30 and salary>1500;
+
+-- 9. Find all employees whose designation is either manager or president.
+select name from tbl_employee where jobs='manager' or jobs='president';
+
+-- 10. Find all managers who are not in department 30.
+select name from tbl_employee where jobs='manager'  and d_no  <> 30;
+
+-- 11. Find all the details of managers and clerks in dept 10.
+select name from tbl_employee where jobs in('manager','clerk') and d_no=10;
+
+-- 12. Find the details of all the managers (in any dept) and clerks in dept 20.
+select name from tbl_employee where jobs='manager' or (jobs='clerk' and d_no=20);
+
+-- 13. Find the details of all the managers in dept. 10 and all clerks in dept 20 and all employees who are neither managers nor clerks but whose salary is more than or   equal to 2000/-.
+select * from tbl_employee where (jobs='manager' and d_no='10') or(jobs='clerk' and d_no='20') or(jobs!='manager' and jobs!='clerk') and (salary>=20000);
+
+-- 14. Find the names of anyone in dept. 20 who is neither manager nor clerk.
+select * from tbl_employee where d_no = 20 and (jobs<>'manage' and jobs<>'clerk');
+-- 15. Find the names of employees who earn between 1200/- and 1400/-.
+select * from tbl_employee where commission between 1200 and 1400;
+-- 16. Find the employees who are clerks, analysts or salesmen.
+select name from tbl_employee where  jobs in('clerk','analysts','salesmen');
+-- 17. Find the employees who are not clerks, analysts or salesmen.
+select name from tbl_employee where  jobs not in('clerk','analysts','salesmen');
+-- 18. Find the employees who do not receive commission.
+select name from tbl_employee where  commission = '0';
+-- 19. Find the different jobs of employees receiving commission.
+select distinct jobs from tbl_employee where commission > 0;
+-- 20. Find the employees who do not receive commission or whose commission is less than 100/-.
+select name from tbl_employee where  commission = '0' and commission < 100;
+
+-- 21. If all the employees not receiving commission is entitles to a bonus of Rs. 250/- show the net earnings of all the employees.
+select name,commission,
+case  commission
+	when 0 then(salary+250)
+end
+as net_earning
+from tbl_employee;    
+
+-- 22. Find all the employees whose total earning is greater than 2000/- .
+select name,salary as totalearning from tbl_employee where salary+commission>2000;
+
+-- 23. Find all the employees whose name begins or ends with ‘M’
+select name from tbl_employee where name like('M%') or name like('%M');
+
+-- 24. Find all the employees whose names contain the letter ‘M’ in any case.
+select name from tbl_employee where name like('%M%')or name like'%m%';
+
+-- 25. Find all the employees whose names are upto 15 character long and have letter ‘R’ as 3rd character of their names.
+select name from tbl_employee where length(name)<=15 and name like('__r%');
+
+-- 26. Find all the employees who were hired in the month of February (of any year).
+select name from tbl_employee where month(hired_date)='2';
+
+-- 27. Find all the employees who were hired on last day of the month.
+select * from tbl_employee where day(hired_date) = day(LAST_DAY(hired_date));
+
+-- 28. Find all the employees who were hired more than 2 years ago.
+select * from tbl_employee where hired_date < curdate() - interval 2 year;
+
+-- 29. Find the managers hired in the year 2003.
+select name from tbl_employee where year(hired_date)='2003';
+
+-- 30. Display the names and jobs of all the employees separated by a space.
+select concat(name,'  ',jobs) as names_jobs from tbl_employee;
+
+-- 31. Display the names of all the employees right aligning them to 15 characters.
+select lpad(name,15,'.') from tbl_employee;
+
+-- 32. Display the names of all the employees padding them to the right up to 15 characters with ‘*’.
+select rpad(name,15,'*') from tbl_employee;
+
+-- 33. Display the names of all the employees without any leading ‘A’.
+select name from tbl_employee where name not like('A%');
+
+-- 34. Display the names of all the employees without any trailing ‘R’.
+select name from tbl_employee where name not like('%r');
+
+-- 35. Show the first 3 and last 3 characters of the names of all the employees.
+select  concat(left(name ,3),right(name,3)) as name from tbl_employee;
+
+-- 36. Display the names of all the employees replacing ‘A’ with ‘a’.
+select replace(name,'A','a') from tbl_employee;
+
+-- 37. Display the names of all the employees and position where the string ‘AR’ occurs in the name.
+select name, locate('ar', name) as position from tbl_employee where name like '%ar%';
+
+-- 38. Show the salary of all the employees , rounding it to the nearest Rs. 1000/-.
+select round(salary, -2) as rounded_salary from tbl_employee; 
+
+-- 39. Display the names, jobs and salaries of employees, sorting on job and salary.
+select name,jobs,salary from tbl_employee order by salary,jobs;
+
+-- 40. Display the names, jobs and salaries of employees, sorting on descending order of job and within job sorted on salary.
+select name, jobs, salary from tbl_employee order by jobs desc;
+
+-- 41. List the employee names, department names and salary for those employees who have completed 1 year of service.
+SELECT name,jobs, salary, year(from_days(datediff(created_at, hired_date)))=1 as experience, year(hired_date) as years from tbl_employee;  
+
+-- 42. List the employee names, department names and hiredate for those employees who have joined in 2003 . Sort your output in the order of joining date.
+select name, jobs, hired_date, d.name from tbl_employee e join tbl_department d on e.d_no=d_no where year(hired_date)=2003 order by hired_date;

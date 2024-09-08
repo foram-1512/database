@@ -1,0 +1,147 @@
+create table tbl_worker(
+worker_id bigint(20) primary key not null auto_increment,
+first_name  varchar(20),
+last_name varchar(20),
+salary int,
+joining_date datetime, 
+department enum('HR','Admin','Account')
+);
+
+insert into tbl_worker values(1,'monika','arora','100000','2014-02-20 09:00:00','HR');
+insert into tbl_worker values(2,'Niharika','Verma','80000','2014-06-11 09:00:00','Admin');
+insert into tbl_worker values(3,'Vishal','Singhal','300000','2014-02-20 09:00:00','HR');
+insert into tbl_worker values(4,'Amitabh','Singh','500000','2014-02-20 09:00:00','Admin');
+insert into tbl_worker values(5,'Vivek','Bhati','500000','2014-06-11 09:00:00','Admin');
+insert into tbl_worker values(6,'Vipul','Diwan','200000','2014-06-11 09:00:00','Account');
+insert into tbl_worker values(7,'Satish','Kumar','75000','2014-01-20 09:00:00','Account');
+insert into tbl_worker values(8,'Geetika','Chauhan','90000','2014-04-11 09:00:00','Admin');
+
+Q-1. Write an SQL query to fetch “FIRST_NAME” from Worker table using the alias name as <WORKER_NAME>.
+
+----> SELECT first_name as WORKER_NAME FROM tbl_worker;
+
+Q-2. Write an SQL query to fetch “FIRST_NAME” from Worker table in upper case.
+
+----->SELECT UPPER(first_name) FROM tbl_worker;
+
+Q-3. Write an SQL query to fetch unique values of DEPARTMENT from Worker table.
+
+----->SELECT  DISTINCT department FROM tbl_worker;
+
+Q-4. Write an SQL query to print the first three characters of  FIRST_NAME from Worker table.
+
+----->SELECT  LEFT(first_name,3) FROM tbl_worker;	
+
+Q-5. Write an SQL query that fetches the unique values of DEPARTMENT from Worker table and prints its length.
+
+---->SELECT DISTINCT(LENGTH(department)) FROM tbl_worker;
+
+Q-6. Write an SQL query to print the FIRST_NAME from Worker table after replacing ‘a’ with ‘A’.
+
+---->SELECT REPLACE(first_name,"a", "A") FROM tbl_worker;
+
+Q-7. Write an SQL query to print the FIRST_NAME and LAST_NAME from Worker table into a single column COMPLETE_NAME. A space char should separate them.
+
+---->SELECT CONCAT(first_name,' ',last_name) AS COMPLETE_NAME FROM tbl_worker;
+
+Q-8. Write an SQL query to print all Worker details from the Worker table order by FIRST_NAME Ascending.
+
+---->SELECT * FROM tbl_worker ORDER BY first_name ASC;
+
+Q-9. Write an SQL query to print all Worker details from the Worker table order by FIRST_NAME Ascending and DEPARTMENT Descending.
+
+---->SELECT * FROM tbl_worker ORDER BY first_name ASC , department DESC;
+
+Q-10. Write an SQL query to print details for Workers with the first name as “Vipul” and “Satish” from Worker table.
+
+----->SELECT * FROM tbl_worker WHERE first_name IN ('Vipul ','Satish');
+
+Q-11. Write an SQL query to print details of workers excluding first names, “Vipul” and “Satish” from Worker table.
+
+----->SELECT * FROM tbl_worker WHERE first_name NOT IN ('Vipul ','Satish');
+
+Q-12. Write an SQL query to print details of Workers with DEPARTMENT name as “Admin”.
+
+----->SELECT * FROM tbl_worker WHERE department LIKE 'Admin';
+
+Q-13. Write an SQL query to print details of the Workers whose FIRST_NAME contains ‘a’.
+
+----->SELECT * FROM tbl_worker WHERE first_name LIKE '%a%';
+
+Q-14. Write an SQL query to print details of the Workers whose FIRST_NAME ends with ‘a’.
+
+----->SELECT * FROM tbl_worker WHERE first_name LIKE '%a';
+
+Q-15. Write an SQL query to print details of the Workers whose FIRST_NAME ends with ‘h’ and contains six alphabets.
+
+----->SELECT * FROM tbl_worker WHERE first_name LIKE '_____h';
+
+Q-16. Write an SQL query to print details of the Workers whose SALARY lies between 100000 and 500000.
+
+---->SELECT * FROM tbl_worker where salary Between 100000 and 500000;
+
+Q-17. Write an SQL query to print details of the Workers who have joined in Feb’2014.
+
+---->SELECT * FROM tbl_worker WHERE year(joining_date)=2014 AND month(joining_date)=2;
+
+Q-18. Write an SQL query to fetch the count of employees working in the department ‘Admin’.
+
+---->SELECT COUNT(*) FROM tbl_worker WHERE department LIKE 'Admin'
+
+Q-19. Write an SQL query to fetch worker names with salaries >= 50000 and <= 100000.
+
+---->SELECT first_name FROM tbl_worker WHERE salary >=50000 and salary<=100000
+
+Q-20. Write an SQL query to show only odd rows from a table.
+
+---->SELECT * FROM tbl_worker WHERE Mod(worker_id,2)<>0;
+
+Q-21. Write an SQL query to show the top n (say 10) records of a table.
+
+----->SELECT * FROM tbl_worker LIMIT 10;
+
+Q-22. Write an SQL query to determine the nth (say n=5) highest salary from a table.
+
+---->SELECT salary FROM tbl_worker ORDER BY salary DESC LIMIT 5;
+
+Q-23. Write an SQL query to show the second highest salary from a table.
+
+---->SELECT MAX(salary) from tbl_worker WHERE salary NOT IN (SELECT MAX(salary) FROM tbl_worker);
+
+Q-24. Write an SQL query to fetch the departments that have less than five people in it.
+
+---->SELECT department, COUNT(WORKER_ID) FROM tbl_worker GROUP BY department HAVING COUNT(worker_id ) < 5;
+
+Q-25. Write an SQL query to show all departments along with the number of people in there.
+
+---->SELECT department, COUNT(department) as 'Number of Workers' FROM tbl_worker GROUP BY department;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Q-24. Write an SQL query to fetch the departments that have less than five people in it.
+
+->  SELECT DEPARTMENT, COUNT(WORKER_ID) FROM Worker GROUP BY DEPARTMENT HAVING COUNT(WORKER_ID) < 5;
+
+Q-25. Write an SQL query to show all departments along with the number of people in there.
+
+->  SELECT DEPARTMENT, COUNT(DEPARTMENT) as 'Number of Workers' FROMWorker GROUP BY DEPARTMENT;
+
+
+
+
+
+
+
+​
